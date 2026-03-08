@@ -51,4 +51,48 @@ To develop a web-based virtual cyber laboratory that provides students with a sa
 - Task Queue/Caching -- Redis
 - Remote Access -- NoVnc
 
-### 
+### SETUP
+
+## FRONTEND
+
+    npm create vite@latest frontend /*select react then typescript*/
+
+    cd frontend /*move to the folder*/
+    
+    npm install /*install packages*/
+
+    npm install -D tailwindcss@3 postcss autoprefixer /*install tailwind*/
+ 
+    npx tailwindcss init -p /*intialize tailwind*/
+
+    Edit tailwind.config.js
+    /** @type {import('tailwindcss').Config} */
+    module.exports = {
+    content: [
+        "./index.html",
+        "./src/**/*.{js,ts,jsx,tsx}",
+    ],
+    theme: {
+        extend: {},
+    },
+    plugins: [],
+    }
+
+## BACKEND
+
+    mkdir backend /*make the folder*/
+    
+    cd backend /*move to the folder*/
+
+    npm init -y /*initialize the npm*/
+
+    npm install express cors dotenv pg jsonwebtoken bcrypt helmet express-rate-limit express-validator /*install dependencies*/
+
+    npm install nodemon --save-dev /*install development tool*/
+
+    nano .env /*make a file and add this to the file*/
+        DB_USER=postgres
+        DB_PASSWORD=your_password
+        DB_NAME=cyberlab
+        DB_HOST=localhost
+        JWT_SECRET=your_key
