@@ -4,6 +4,42 @@
 
 To design and implement a web-based virtual cyber laboratory that allows students to perform practical cybersecurity experiments and gain hands-on experience with real-world security tools, attack simulations, and defensive techniques.
 
+
+### GOAL
+
+To develop a web-based virtual cyber laboratory that provides students with a safe, scalable, and interactive environment with isolated lab instances, enabling them to perform practical cybersecurity experiments and gain hands-on experience with real-world security tools, attack simulations, and defensive techniques.
+
+### OBJECTIVE
+
+-**Provide Practical Learning Environment**
+    
+    Create an online platform where students can perform cybersecurity experiments without needing complex local setups.
+
+-**Enable Hands-on Experience with Security Tools**
+    
+    Allow students to use industry-standard cybersecurity tools for tasks such as penetration testing, vulnerability analysis, and network monitoring.
+
+-**Simulate Real-World Cyber Attacks and Defenses**
+    
+    Design controlled attack scenarios and defense exercises to help students understand real cyber threats and mitigation strategies.
+
+-**Ensure Secure and Isolated Lab Environments**
+    
+    Use containerization or virtualization technologies to provide isolated lab environments for each student to safely execute experiments.
+
+-**Support Scalable Multi-User Access**
+    
+    Develop the system to support multiple students simultaneously while maintaining performance and reliability.
+
+-**Automate Lab Deployment and Management**
+    
+    Implement backend automation to dynamically create, manage, and terminate lab environments when students start or finish experiments.
+
+-**Enhance Cybersecurity Skills and Awareness**
+    
+    Help students build practical cybersecurity skills and improve their understanding of modern security challenges.
+
+
 ### TOOLS
 
 - Operating system -- Ubuntu 22.04
@@ -14,3 +50,5 @@ To design and implement a web-based virtual cyber laboratory that allows student
 - Database -- Postgres
 - Task Queue/Caching -- Redis
 - Remote Access -- NoVnc
+
+### 
