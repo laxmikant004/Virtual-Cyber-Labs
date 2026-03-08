@@ -65,18 +65,6 @@ To develop a web-based virtual cyber laboratory that provides students with a sa
  
     npx tailwindcss init -p /*intialize tailwind*/
 
-    Edit tailwind.config.js
-    /** @type {import('tailwindcss').Config} */
-    module.exports = {
-    content: [
-        "./index.html",
-        "./src/**/*.{js,ts,jsx,tsx}",
-    ],
-    theme: {
-        extend: {},
-    },
-    plugins: [],
-    }
 
 ## BACKEND
 
