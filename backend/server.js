@@ -1,15 +1,23 @@
-const express = require("express")
-const cors = require("cors")
-require("dotenv").config()
+require("dotenv").config();
 
-const app = express()
+const express = require("express");
+const cors = require("cors");
+const helmet = require("helmet");
+const cookieParser = require("cookie-parser");
 
-app.use(cors())
-app.use(express.json())
+const authRoutes = require("./routes/authRoutes");
 
-app.get("/", (req, res) => {
-  res.send("Virtual Cyber Labs Backend Running")
-})
+const app = express();
+
+app.use(express.json());
+app.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true
+}));
+app.use(helmet());
+app.use(cookieParser());
+
+app.use("/api/auth", authRoutes);
 
 const PORT = process.env.PORT || 5000
 

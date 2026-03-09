@@ -74,7 +74,7 @@ To develop a web-based virtual cyber laboratory that provides students with a sa
 
     npm init -y /*initialize the npm*/
 
-    npm install express cors dotenv pg jsonwebtoken bcrypt helmet express-rate-limit express-validator /*install dependencies*/
+    npm install express cors dotenv pg jsonwebtoken bcrypt helmet express-rate-limit express-validator nodemailer cookie-parser speakeasy /*install dependencies*/
 
     npm install nodemon --save-dev /*install development tool*/
 
@@ -84,3 +84,16 @@ To develop a web-based virtual cyber laboratory that provides students with a sa
         DB_NAME=cyberlab
         DB_HOST=localhost
         JWT_SECRET=your_key
+        EMAIL_USER=your_email@gmail.com
+        EMAIL_PASS=your_app_password
+
+## ENDPOINTS
+
+        | Method | Endpoint                          | Purpose        |
+        | ------ | --------------------------------- | -------------- |
+        | POST   | `/api/auth/register`              | Register user  |
+        | POST   | `/api/auth/verify`                | Verify OTP     |
+        | POST   | `/api/auth/login`                 | Login          |
+        | POST   | `/api/auth/logout`                | Logout         |
+        | POST   | `/api/auth/forgot-password`       | Request reset  |
+        | POST   | `/api/auth/reset-password/:token` | Reset password |

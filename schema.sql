@@ -1,9 +1,22 @@
+
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
+
     username VARCHAR(100) UNIQUE NOT NULL,
-    email VARCHAR(150),
-    password_hash TEXT,
+    email VARCHAR(150) UNIQUE NOT NULL,
+
+    password_hash TEXT NOT NULL,
+
     role VARCHAR(20) DEFAULT 'student',
+
+    is_verified BOOLEAN DEFAULT FALSE,
+
+    otp_code VARCHAR(10),
+    otp_expiry TIMESTAMP,
+
+    reset_token TEXT,
+    reset_token_expiry TIMESTAMP,
+
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE tbl_networks (
@@ -98,11 +111,11 @@ CREATE TABLE tbl_running_machine_info (
     FOREIGN KEY (session_id) REFERENCES lab_sessions(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
-CREATE INDEX idx_user_id 
+CREATE INDEX idx_running_user
 ON tbl_running_machine_info(user_id);
 
-CREATE INDEX idx_machine_name 
+CREATE INDEX idx_running_machine
 ON tbl_running_machine_info(machine_name);
 
-CREATE INDEX idx_network_user 
+CREATE INDEX idx_network_user
 ON tbl_networks(user_id);
