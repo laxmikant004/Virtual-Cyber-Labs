@@ -51,6 +51,9 @@ CREATE TABLE images (
 
     description TEXT,
 
+    username VARCHAR(100),
+    password VARCHAR(100),
+
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE lab_sessions (
