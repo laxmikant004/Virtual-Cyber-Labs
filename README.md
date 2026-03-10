@@ -59,7 +59,7 @@ To develop a web-based virtual cyber laboratory that provides students with a sa
 
     cd frontend /*move to the folder*/
     
-    npm install /*install packages*/
+    npm install axios react-router-dom /*install packages*/
 
     npm install -D tailwindcss@3 postcss autoprefixer /*install tailwind*/
  
