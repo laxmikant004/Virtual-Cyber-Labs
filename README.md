@@ -53,10 +53,78 @@ To develop a web-based virtual cyber laboratory that provides students with a sa
 
 ### SETUP
 
-## TOOLS SETUP
+## TOOLS SETUP {only for Ubuntu OS}
 
 
+ #### LXC/LXD setup
+    sudo apt install lxd -y
 
+    sudo lxd init
+
+    Would you like to use LXD clustering? (yes/no) [default=no]: /*Enter*/
+
+    Do you want to configure a new storage pool? (yes/no) [default=yes]: /*Enter*/
+    
+    Name of the new storage pool [default=default]: /*Enter*/
+    
+    Name of the storage backend to use (cephobject, dir, lvm, zfs, btrfs, ceph) [default=zfs]: /*Enter*/
+    
+    Create a new ZFS pool? (yes/no) [default=yes]: /*Enter*/
+    
+    Would you like to use an existing empty block device (e.g. a disk or partition)? (yes/no) [default=no]: /*Enter*/
+    
+    Size in GiB of the new loop device (1GiB minimum) [default=30GiB]: 50 /*type 50 & Enter*/
+    
+    Would you like to connect to a MAAS server? (yes/no) [default=no]: /*Enter*/
+    
+    Would you like to create a new local network bridge? (yes/no) [default=yes]: no /*type no & Enter*/
+    
+    Would you like to configure LXD to use an existing bridge or host interface? (yes/no) [default=no]: /*Enter*/
+    
+    Would you like the LXD server to be available over the network? (yes/no) [default=no]: yes /*type yes & Enter*/
+    
+    Address to bind LXD to (not including port) [default=all]:  /*Enter*/
+    
+    Port to bind LXD to [default=8443]: /*Enter*/
+    
+    Would you like stale cached images to be updated automatically? (yes/no) [default=yes]: /*Enter*/
+    
+    Would you like a YAML "lxd init" preseed to be printed? (yes/no) [default=no]: /*Enter*/
+
+ #### Docker setup
+    sudo apt install ca-certificates curl gnupg lsb-release -y
+    
+    sudo mkdir -p /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
+    sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+    echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+    https://download.docker.com/linux/ubuntu \
+    $(lsb_release -cs) stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+    sudo apt update
+    sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+ 
+    sudo systemctl start docker
+    sudo systemctl enable docker
+ #### Redis setup
+    sudo apt install redis-server
+    sudo systemctl enable redis
+    sudo systemctl start redis
+
+ #### Node.js {Required for React + Express}
+    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+    sudo apt install nodejs -y
+
+ #### Python
+    sudo apt install python3 python3-pip python3-venv -y
+ #### Postgres SQL
+    sudo apt install postgresql postgresql-contrib -y
+
+    sudo systemctl start postgresql
+    sudo systemctl enable postgresql   
 ## FRONTEND {REACT}
 
     npm create vite@latest frontend /*select react then typescript*/
