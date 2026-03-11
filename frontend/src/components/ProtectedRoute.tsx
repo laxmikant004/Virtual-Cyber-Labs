@@ -3,9 +3,9 @@ import { useAuth } from "../contexts/AuthContext"
 
 export default function ProtectedRoute({ children }: any) {
 
-  const { token } = useAuth()
+  const { authenticated } = useAuth()
 
-  if (!token) {
+  if (!authenticated) {
     return <Navigate to="/" />
   }
 
