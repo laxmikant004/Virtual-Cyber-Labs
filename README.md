@@ -53,7 +53,11 @@ To develop a web-based virtual cyber laboratory that provides students with a sa
 
 ### SETUP
 
-## FRONTEND
+## TOOLS SETUP
+
+
+
+## FRONTEND {REACT}
 
     npm create vite@latest frontend /*select react then typescript*/
 
@@ -66,7 +70,7 @@ To develop a web-based virtual cyber laboratory that provides students with a sa
     npx tailwindcss init -p /*intialize tailwind*/
 
 
-## BACKEND
+## BACKEND {NODE.JS}
 
     mkdir backend /*make the folder*/
     
@@ -87,13 +91,36 @@ To develop a web-based virtual cyber laboratory that provides students with a sa
         EMAIL_USER=your_email@gmail.com
         EMAIL_PASS=your_app_password
 
-## ENDPOINTS
+## BACKEND 2 {PYTHON}
 
-        | Method | Endpoint                          | Purpose        |
-        | ------ | --------------------------------- | -------------- |
-        | POST   | `/api/auth/register`              | Register user  |
-        | POST   | `/api/auth/verify`                | Verify OTP     |
-        | POST   | `/api/auth/login`                 | Login          |
-        | POST   | `/api/auth/logout`                | Logout         |
-        | POST   | `/api/auth/forgot-password`       | Request reset  |
-        | POST   | `/api/auth/reset-password/:token` | Reset password |
+    python3 -m venv venv
+
+    source venv/bin/activate
+
+    nano requirements.txt
+
+    psycopg2-binary /*add to requriments.txt*/
+    redis
+    PyYAML
+    python-dotenv
+
+    pip install -r requirements.txt
+
+    nano .env
+
+    DB_HOST=localhost /*add .env*/
+    DB_PORT=5432
+    DB_NAME=cyberlab
+    DB_USER=postgres
+    DB_PASSWORD=yourpassword
+
+    REDIS_HOST=localhost
+    REDIS_PORT=6379
+    REDIS_DB=0
+
+    nano .gitignore
+
+    .env /*add to .gitignore*/
+    venv
+    logs
+    __pycache__
