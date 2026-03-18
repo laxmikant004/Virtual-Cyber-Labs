@@ -4,6 +4,7 @@ const crypto = require("crypto");
 
 const pool = require("../config/db");
 const transporter = require("../config/mailer");
+const { enqueueNetwork } = require("../utils/networkQueue");
 
 function generateOTP() {
     return Math.floor(100000 + Math.random() * 900000).toString();
@@ -106,10 +107,14 @@ exports.verifyOTP = async (req, res) => {
              WHERE email=$1`,
             [email]
         );
-
+// after successful user insert
+        await enqueueNetwork(user.id);
+        
         res.json({
             message: "Account verified successfully"
         });
+
+        
 
     } catch (error) {
 

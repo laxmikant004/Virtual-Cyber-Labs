@@ -124,7 +124,8 @@ To develop a web-based virtual cyber laboratory that provides students with a sa
     sudo apt install postgresql postgresql-contrib -y
 
     sudo systemctl start postgresql
-    sudo systemctl enable postgresql   
+    sudo systemctl enable postgresql
+   
 ## FRONTEND {REACT}
 
     npm create vite@latest frontend /*select react then typescript*/
@@ -146,7 +147,7 @@ To develop a web-based virtual cyber laboratory that provides students with a sa
 
     npm init -y /*initialize the npm*/
 
-    npm install express cors dotenv pg jsonwebtoken bcrypt helmet express-rate-limit express-validator nodemailer cookie-parser speakeasy /*install dependencies*/
+    npm install express cors dotenv pg jsonwebtoken bcrypt helmet express-rate-limit express-validator nodemailer cookie-parser speakeasy ioredis /*install dependencies*/
 
     npm install nodemon --save-dev /*install development tool*/
 
@@ -160,6 +161,14 @@ To develop a web-based virtual cyber laboratory that provides students with a sa
         EMAIL_PASS=your_app_password
 
 ## BACKEND 2 {PYTHON}
+    
+    nano .gitignore
+
+    venv/
+    .env
+    __pycache__/
+    logs/
+    *.pyc
 
     python3 -m venv venv
 
@@ -186,9 +195,6 @@ To develop a web-based virtual cyber laboratory that provides students with a sa
     REDIS_PORT=6379
     REDIS_DB=0
 
-    nano .gitignore
+    sudo visudo
 
-    .env /*add to .gitignore*/
-    venv
-    logs
-    __pycache__
+    laxmikant ALL=(ALL) NOPASSWD: /home/laxmikant/Virtual-Cyber-Labs/backend2/venv/bin/python /home/laxmikant/Virtual-Cyber-Labs/backend2/scripts/create_user_bridges.py *create_user_bridges.py *
