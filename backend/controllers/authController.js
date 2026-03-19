@@ -71,7 +71,6 @@ exports.register = async (req, res) => {
 // VERIFY OTP
 //
 exports.verifyOTP = async (req, res) => {
-
     const { email, otp } = req.body;
 
     if (!email || !otp) {
@@ -79,53 +78,66 @@ exports.verifyOTP = async (req, res) => {
     }
 
     try {
-
-        const user = await pool.query(
+        // 🔍 Fetch user
+        const result = await pool.query(
             "SELECT * FROM users WHERE email=$1",
             [email]
         );
 
-        if (user.rows.length === 0) {
+        if (result.rows.length === 0) {
             return res.status(400).json({ message: "User not found" });
         }
 
-        const dbUser = user.rows[0];
+        const dbUser = result.rows[0];
 
+        // ❌ Invalid OTP
         if (dbUser.otp_code !== otp) {
             return res.status(400).json({ message: "Invalid OTP" });
         }
 
+        // ❌ Expired OTP
         if (new Date() > dbUser.otp_expiry) {
             return res.status(400).json({ message: "OTP expired" });
         }
 
+        // ✅ Mark verified
         await pool.query(
             `UPDATE users 
              SET is_verified=TRUE,
                  otp_code=NULL,
                  otp_expiry=NULL
-             WHERE email=$1`,
-            [email]
+             WHERE id=$1`,
+            [dbUser.id]
         );
-// after successful user insert
-        await enqueueNetwork(user.id);
-        
-        res.json({
+
+        // 🔒 CHECK: network already exists?
+        const networkCheck = await pool.query(
+            "SELECT id FROM tbl_networks WHERE user_id=$1",
+            [dbUser.id]
+        );
+
+        // 🚀 Queue ONLY if not exists
+        if (networkCheck.rows.length === 0) {
+            try {
+                await enqueueNetwork(dbUser.id);
+                console.log(`[QUEUE] Network job added for user ${dbUser.id}`);
+            } catch (queueError) {
+                console.error("[QUEUE ERROR]", queueError);
+                // Do NOT fail user verification if queue fails
+            }
+        }
+
+        // ✅ Final response
+        return res.json({
             message: "Account verified successfully"
         });
 
-        
-
     } catch (error) {
-
-        console.error(error);
-
-        res.status(500).json({
+        console.error("[VERIFY OTP ERROR]", error);
+        return res.status(500).json({
             message: "Server error"
         });
-
     }
-
 };
 
 

@@ -1,4 +1,5 @@
 import redis
+import sys
 import json
 import os
 import subprocess
@@ -14,52 +15,43 @@ r = redis.Redis(
     decode_responses=True
 )
 
-QUEUE = os.getenv("QUEUE_NAME", "network_queue")
+QUEUE = os.getenv("QUEUE_NAME", "network-queue")
 
 SCRIPT = "/home/laxmikant/Virtual-Cyber-Labs/backend2/scripts/create_user_bridges.py"
-PYTHON = "/home/laxmikant/Virtual-Cyber-Labs/backend2/venv/bin/python"
-
-
-def acquire_lock(user_id):
-    return r.set(f"network:lock:{user_id}", "1", nx=True, ex=300)
-
-
-def release_lock(user_id):
-    r.delete(f"network:lock:{user_id}")
+PYTHON = "/home/laxmikant/Virtual-Cyber-Labs/backend2/venv/bin/python3"
 
 
 def process(user_id):
-    print(f"[+] Creating network for user {user_id}")
+    print(f"[+] Creating network for user {user_id}", flush=True)
 
     subprocess.run(
         ["sudo", PYTHON, SCRIPT, str(user_id)],
         check=True
     )
 
-    print(f"[✓] Done user {user_id}")
+    print(f"[✓] Done user {user_id}", flush=True)
 
 
 def start_worker():
-    print("[WORKER] Started...")
+    print("[WORKER] Started...", flush=True)
 
     while True:
         try:
             _, job = r.brpop(QUEUE)
             data = json.loads(job)
 
-            user_id = data["user_id"]
+            user_id = data.get("user_id")
 
-            if not acquire_lock(user_id):
-                print(f"[SKIP] User {user_id} already running")
+            if not user_id:
+                print("[SKIP] Invalid job:", data, flush=True)
                 continue
 
-            try:
-                process(user_id)
-            finally:
-                release_lock(user_id)
+            print(f"[JOB] Processing user {user_id}", flush=True)
+
+            process(user_id)
 
         except Exception as e:
-            print("[ERROR]", e)
+            print("[ERROR]", e, flush=True)
             time.sleep(2)
 
 

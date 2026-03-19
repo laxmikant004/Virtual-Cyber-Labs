@@ -198,3 +198,31 @@ To develop a web-based virtual cyber laboratory that provides students with a sa
     sudo visudo
 
     laxmikant ALL=(ALL) NOPASSWD: /home/laxmikant/Virtual-Cyber-Labs/backend2/venv/bin/python /home/laxmikant/Virtual-Cyber-Labs/backend2/scripts/create_user_bridges.py *create_user_bridges.py *
+
+   #### Creating systemmd service  
+
+    sudo nano /etc/systemd/system/cyberlab-worker.service
+
+    [Unit]
+    Description=CyberLab Worker
+    After=network.target
+
+    [Service]
+    User=laxmikant
+    WorkingDirectory=/home/laxmikant/Virtual-Cyber-Labs/backend2
+    ExecStart=/home/laxmikant/Virtual-Cyber-Labs/backend2/venv/bin/python workers/worker.py
+    Restart=always
+    Environment=PYTHONUNBUFFERED=1
+
+    [Install]
+    WantedBy=multi-user.target
+
+    */Start the systemmd service/*
+
+    sudo systemctl daemon-reload
+    sudo systemctl enable cyberlab-worker
+    sudo systemctl start cyberlab-worker
+
+    */Check logs /*
+
+    sudo journalctl -u cyberlab-worker -f
