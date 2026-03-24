@@ -156,6 +156,11 @@ To develop a web-based virtual cyber laboratory that provides students with a sa
         DB_PASSWORD=your_password
         DB_NAME=cyberlab
         DB_HOST=localhost
+        DB_PORT = 5432
         JWT_SECRET=your_key
         EMAIL_USER=your_email@gmail.com
         EMAIL_PASS=your_app_password
+
+        sudo visudo
+
+        laxmikant ALL=(ALL) NOPASSWD: /usr/bin/python3 /home/laxmikant/Virtual-Cyber-Labs/backend/scripts/*
