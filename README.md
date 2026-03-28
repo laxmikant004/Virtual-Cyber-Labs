@@ -170,7 +170,8 @@ To develop a web-based virtual cyber laboratory that provides students with a sa
 
     pip install psycopg2-binary pyyaml python-dotenv
 
-    chmod +x backend/scripts/create_user_bridges.py
+   ##### Make all the files executabble
+    chmod +x backend/scripts/"filename"
     
 
    ## UPDATE VISUDO
