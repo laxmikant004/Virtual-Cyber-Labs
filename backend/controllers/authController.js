@@ -5,8 +5,7 @@ const { spawn } = require("child_process");
 
 const pool = require("../config/db");
 const transporter = require("../config/mailer");
-const { enqueueNetwork } = require("../utils/networkQueue");
-
+const { enqueueNetwork } = require("../queue/networkQueue");
 function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
@@ -73,7 +72,6 @@ exports.verifyOTP = async (req, res) => {
   }
 
   try {
-    // 🔍 Fetch user
     const result = await pool.query("SELECT * FROM users WHERE email=$1", [
       email,
     ]);
@@ -84,58 +82,38 @@ exports.verifyOTP = async (req, res) => {
 
     const dbUser = result.rows[0];
 
-    // ❌ Invalid OTP
     if (dbUser.otp_code !== otp) {
       return res.status(400).json({ message: "Invalid OTP" });
     }
 
-    // ❌ Expired OTP
     if (new Date() > dbUser.otp_expiry) {
       return res.status(400).json({ message: "OTP expired" });
     }
 
-    // ✅ Mark verified
+    // ✅ mark verified
     await pool.query(
       `UPDATE users 
-             SET is_verified=TRUE,
-                 otp_code=NULL,
-                 otp_expiry=NULL
-             WHERE id=$1`,
+       SET is_verified=TRUE,
+           otp_code=NULL,
+           otp_expiry=NULL
+       WHERE id=$1`,
       [dbUser.id],
     );
 
-    // 🔒 CHECK: network already exists?
+    // ✅ check existing network
     const networkCheck = await pool.query(
       "SELECT id FROM tbl_networks WHERE user_id=$1",
       [dbUser.id],
     );
 
-    // 🚀 Queue ONLY if not exists
-    // 🚀 Run Python script directly (TEMPORARY)
-    const scriptPath =
-      "/home/laxmikant/Virtual-Cyber-Labs/backend/scripts/create_user_bridges.py";
+    // ✅ enqueue only if not exists
+    if (networkCheck.rows.length === 0) {
+      console.log(`[QUEUE] Adding job for user ${dbUser.id}`);
+      await enqueueNetwork(dbUser.id); // ✅ correct
+    }
 
-    const process = spawn("sudo", [
-      "python3",
-      scriptPath,
-      dbUser.id.toString(),
-    ]);
-
-    process.stdout.on("data", (data) => {
-      console.log(`[PYTHON STDOUT]: ${data}`);
-    });
-
-    process.stderr.on("data", (data) => {
-      console.error(`[PYTHON STDERR]: ${data}`);
-    });
-
-    process.on("close", (code) => {
-      console.log(`[PYTHON EXIT]: code ${code}`);
-    });
-
-    // ✅ Final response
     return res.json({
-      message: "Account verified successfully",
+      message: "Account verified successfully. Network setup in progress...",
     });
   } catch (error) {
     console.error("[VERIFY OTP ERROR]", error);

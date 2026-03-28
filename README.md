@@ -57,6 +57,7 @@ To develop a web-based virtual cyber laboratory that provides students with a sa
 
 
  #### LXC/LXD setup
+
     sudo apt install lxd -y
 
     sudo lxd init
@@ -92,6 +93,7 @@ To develop a web-based virtual cyber laboratory that provides students with a sa
     Would you like a YAML "lxd init" preseed to be printed? (yes/no) [default=no]: /*Enter*/
 
  #### Docker setup
+
     sudo apt install ca-certificates curl gnupg lsb-release -y
     
     sudo mkdir -p /etc/apt/keyrings
@@ -109,17 +111,18 @@ To develop a web-based virtual cyber laboratory that provides students with a sa
  
     sudo systemctl start docker
     sudo systemctl enable docker
+
  #### Redis setup
+
     sudo apt install redis-server
     sudo systemctl enable redis
     sudo systemctl start redis
 
  #### Node.js {Required for React + Express}
+
     curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
     sudo apt install nodejs -y
 
- #### Python
-    sudo apt install python3 python3-pip python3-venv -y
  #### Postgres SQL
     sudo apt install postgresql postgresql-contrib -y
 
@@ -147,7 +150,9 @@ To develop a web-based virtual cyber laboratory that provides students with a sa
 
     npm init -y /*initialize the npm*/
 
-    npm install express cors dotenv pg jsonwebtoken bcrypt helmet express-rate-limit express-validator nodemailer cookie-parser speakeasy ioredis /*install dependencies*/
+    npm install express cors dotenv pg jsonwebtoken bcrypt helmet express-rate-limit express-validator nodemailer cookie-parser speakeasy ioredis bullmq /*install dependencies*/
+
+    npm install -g pm2
 
     npm install nodemon --save-dev /*install development tool*/
 
@@ -160,7 +165,43 @@ To develop a web-based virtual cyber laboratory that provides students with a sa
         JWT_SECRET=your_key
         EMAIL_USER=your_email@gmail.com
         EMAIL_PASS=your_app_password
+   
+   ## PYHTON TOOLS
 
-        sudo visudo
+    pip install psycopg2-binary pyyaml python-dotenv
 
-        laxmikant ALL=(ALL) NOPASSWD: /usr/bin/python3 /home/laxmikant/Virtual-Cyber-Labs/backend/scripts/*
+    chmod +x backend/scripts/create_user_bridges.py
+    
+
+   ## UPDATE VISUDO
+
+    <your-username> ALL=(ALL) NOPASSWD: /usr/bin/python3 /path-to-project/backend/scripts/*
+
+    example : laxmikant ALL=(ALL) NOPASSWD: /usr/bin/python3 /home/laxmikant/Virtual-Cyber-Labs/backend/scripts/*
+
+   ## PROCESS MANAGEMENT (PM2)
+
+            Start backend and worker using PM2:
+
+                pm2 start server.js --name backend
+                pm2 start workers/worker.js --name worker
+
+            Save processes:
+
+                pm2 save
+
+            Enable auto-start on reboot:
+
+                pm2 startup
+                # Run the command shown after this
+                pm2 save
+
+            Check running processes:
+
+                pm2 list
+
+            View logs:
+
+                pm2 logs
+
+   

@@ -8,6 +8,8 @@ import shutil
 import yaml
 import psycopg2
 from dotenv import load_dotenv
+import json
+import datetime
 
 # ✅ Load env
 load_dotenv("/home/laxmikant/Virtual-Cyber-Labs/backend/.env")
@@ -22,7 +24,15 @@ NETPLAN_DIR = "/etc/netplan"
 DNSMASQ_DIR = "/etc/dnsmasq.d"
 DNSMASQ_TEMPLATE_SERVICE = "/etc/systemd/system/dnsmasq@.service"
 
-
+# ------------------- LOGS -------------------
+def log(level, message, **kwargs):
+    entry = {
+        "timestamp": datetime.datetime.utcnow().isoformat(),
+        "level": level,
+        "message": message,
+        **kwargs
+    }
+    print(json.dumps(entry))
 # ------------------- UTILS -------------------
 
 def run_command(cmd):
@@ -111,8 +121,7 @@ def insert_network(user_id, bridge, subnet):
 
     conn.commit()
     conn.close()
-    print(f"[DB] Network inserted for user {user_id}")
-
+    log("INFO", "DB insert success", user_id=user_id, bridge=bridge)
 
 # ------------------- SYSTEM FUNCTIONS -------------------
 
@@ -268,7 +277,7 @@ def main():
     bridge_number, subnet = get_next_bridge_from_db()
     bridge = f"br{bridge_number}"
 
-    print(f"[+] Allocating {bridge} ({subnet}.0/24)")
+    log("INFO", "Allocating bridge", bridge=bridge, subnet=f"{subnet}.0/24")
 
     # ✅ Insert FIRST (DB is source of truth)
     insert_network(user_id, bridge, subnet)
